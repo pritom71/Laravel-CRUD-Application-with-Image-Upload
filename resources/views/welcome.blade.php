@@ -9,88 +9,92 @@
     <style type="text/tailwindcss">
         @layer utilities {
             .container {
-                @apply mx-auto px-10;
+                @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
             }
 
             .btn {
-                @apply bg-green-600 text-white rounded py-2 px-4
+                @apply bg-blue-600 text-white rounded-lg py-2 px-4 hover:bg-blue-700 transition;
+            }
+
+            .btn_dlt {
+                @apply bg-red-500 text-white rounded-lg py-2 px-4 hover:bg-red-600 transition;
+            }
+
+            .btn_edit {
+                @apply bg-yellow-500 text-white rounded-lg py-2 px-4 hover:bg-yellow-600 transition;
+            }
+
+            .table-header {
+                @apply text-sm font-medium text-gray-700 uppercase bg-gray-100;
+            }
+
+            .table-row {
+                @apply bg-white border-b hover:bg-gray-50;
+            }
+
+            .table-cell {
+                @apply px-6 py-4 text-sm text-gray-900;
             }
         }
     </style>
-    <title>Document</title>
+    <title>Home</title>
 </head>
 
-<body>
+<body class="bg-gray-50 text-gray-800">
     <div class="container">
-        <div class="flex justify-between my-5">
-            <h2 class="text-red-500 text-xl">Home</h2>
-
+        <!-- Header Section -->
+        <div class="flex items-center justify-between py-6 border-b border-gray-200">
+            <h1 class="text-2xl font-bold text-gray-700">Manage Posts</h1>
             <a href="/create" class="btn">Add New Post</a>
         </div>
 
+        <!-- Success Message -->
         @if (session('success'))
-            <h2 class="text-green-600">{{ session('success') }}</h2>
+            <div class="mt-4 p-4 bg-green-100 text-green-700 rounded-lg">
+                {{ session('success') }}
+            </div>
         @endif
 
-        <div class="">
-
-
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <!-- Posts Table -->
+        <div class="mt-8">
+            <div class="overflow-hidden rounded-lg shadow-lg border border-gray-200">
+                <table class="min-w-full table-auto">
+                    <thead>
                         <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Id
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Description
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Image
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Action
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                <span class="sr-only">Edit</span>
-                            </th>
+                            <th class="table-header px-6 py-3 text-left">Id</th>
+                            <th class="table-header px-6 py-3 text-left">Name</th>
+                            <th class="table-header px-6 py-3 text-left">Description</th>
+                            <th class="table-header px-6 py-3 text-left">Image</th>
+                            <th class="table-header px-6 py-3 text-left">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-
                         @foreach ($posts as $post)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                                <th scope="row"
-                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ $post->id }}
-                                </th>
-                                <td class="px-6 py-4">
-                                    {{ $post->name }}
+                            <tr class="table-row">
+                                <td class="table-cell">{{ $post->id }}</td>
+                                <td class="table-cell">{{ $post->name }}</td>
+                                <td class="table-cell">{{ $post->description }}</td>
+                                <td class="table-cell">
+                                    <img src="images/{{ $post->image }}" alt="Post Image" class="w-16 h-16 rounded-md object-cover">
                                 </td>
-                                <td class="px-6 py-4">
-                                    {{ $post->description }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <img src="images/{{ $post->image }}" alt="" class="w-20 h-20 object-cover">
-                                </td>
-                                <td class="px-6 py-4 text-right">
-                                    <a href="{{ route('edit', $post->id) }}" class="btn">Edit</a>
-
-                                    <a href="{{ route('edit', $post->id) }}" class="btn">Delete</a>
+                                <td class="table-cell">
+                                    <div class="flex space-x-2">
+                                        <a href="{{ route('edit', $post->id) }}" class="btn_edit">Edit</a>
+                                        <a href="{{ route('delete', $post->id) }}" class="btn_dlt">Delete</a>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
 
+            <!-- Pagination -->
+            <div class="mt-6 flex px-3 justify-center">
+                {{ $posts->links() }}
+            </div>
         </div>
     </div>
-
 </body>
 
 </html>
